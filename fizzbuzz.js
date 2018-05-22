@@ -5,13 +5,12 @@ function fizzbuzz(numbers) {
   // array where multiples of 3s and 5s become "Fizz" "Buzz" or "FizzBuzz"
   // using numbers.map()
   // YOUR CODE HERE
-  function conversion(x) {
+  return numbers.map(x => {
     if (x % 15 == 0) return "FizzBuzz";
     else if (x % 3 == 0) return "Fizz";
     else if (x % 5 == 0) return "Buzz";
     else return x;
-  }
-  return numbers.map(x => conversion(x));
+  });
 }
 
 // here's a test case to see if you got it right
