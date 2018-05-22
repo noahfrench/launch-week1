@@ -25,5 +25,6 @@ function test() {
     console.log(element);
   });
 }
+// Added some comments here to practice pushing to git.
 
 test();
