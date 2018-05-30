@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import "typeface-roboto";
 import { Input } from "@material-ui/core";
 import ContractForm from "./ContractForm.js";
+import firebase from "./firebase.js";
 
 class App extends Component {
   constructor() {
@@ -16,9 +17,29 @@ class App extends Component {
     };
   }
 
+  // Update the states given the fields
   updateField(field, newValue) {
     this.setState({
       [field]: newValue
+    });
+  }
+
+  componentDidMount() {
+    const itemsRef = firebase.database().ref("submittedForms");
+    itemsRef.on("value", snapshot => {
+      let items = snapshot.val();
+      let newState = [];
+      for (let item in items) {
+        let newForm = {
+          name: items[item].name,
+          company: items[item].company,
+          contractDetails: items[item].contractDetails
+        };
+        newState.push(newForm);
+      }
+      this.setState({
+        contactList: newState
+      });
     });
   }
 
@@ -32,16 +53,15 @@ class App extends Component {
     let duplicateEmployee = tempArray.some(
       employee => JSON.stringify(employee) === JSON.stringify(person)
     );
+    console.log(this.state.contactList);
     if (
       !duplicateEmployee &&
       person.name !== "" &&
       person.company !== "" &&
       person.contractDetails !== ""
     ) {
-      tempArray.push(person);
-      this.setState({
-        contactList: tempArray
-      });
+      const itemsRef = firebase.database().ref("submittedForms");
+      itemsRef.push(person);
     }
   }
 
@@ -70,11 +90,11 @@ class App extends Component {
         />
         {this.state.contactList.map(e => (
           <p>
-            Name: {e.name}
+            <strong>Name:</strong> {e.name}
             <br />
-            Company: {e.company}
+            <strong>Company:</strong> {e.company}
             <br />
-            Contract Details: {e.contractDetails}
+            <strong>Contract Details:</strong> {e.contractDetails}
             <br />
             <br />
           </p>
